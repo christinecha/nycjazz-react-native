@@ -5,29 +5,44 @@ import {
   StyleSheet,
   Navigator,
   Text,
+  TouchableHighlight,
   View
 } from 'react-native'
 
 
 export default class Show extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.handlePress = this.handlePress.bind(this)
+  }
+
+  handlePress() {
+    const { link, title, startDateTime, venue, updateStore, updateRoute } = this.props
+    updateStore('show', { title, startDateTime, venue })
+    updateStore('uri', link, () => updateRoute(1))
+  }
+
   render() {
     const startMoment = moment(this.props.startDateTime, 'X').tz('America/New_York')
     const hours = startMoment.format('hh:mm')
     const ampm = startMoment.format('A')
 
     return (
-      <View style={styles.view}>
-        <Text style={styles.time}>
-          <Text style={styles.hours}>{hours}</Text>
-          {'\n'}
-          <Text style={styles.ampm}>{ampm}</Text>
-        </Text>
+      <TouchableHighlight onPress={this.handlePress}>
+        <View style={styles.view}>
+          <Text style={styles.time}>
+            <Text style={styles.hours}>{hours}</Text>
+            {'\n'}
+            <Text style={styles.ampm}>{ampm}</Text>
+          </Text>
 
-        <View style={styles.info}>
-          <Text style={styles.venue} numberOfLines={1} ellipsizeMode='tail'>{this.props.venue.toUpperCase()}</Text>
-          <Text style={styles.title} numberOfLines={1} ellipsizeMode='tail'>{this.props.title}</Text>
+          <View style={styles.info}>
+            <Text style={styles.venue} numberOfLines={1} ellipsizeMode='tail'>{this.props.venue.toUpperCase()}</Text>
+            <Text style={styles.title} numberOfLines={1} ellipsizeMode='tail'>{this.props.title}</Text>
+          </View>
         </View>
-      </View>
+      </TouchableHighlight>
     )
   }
 }
